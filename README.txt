@@ -4,7 +4,7 @@ ApiaryParty is a network security game developed using Java 8 but will most like
 To build and execute this code you can do two things:
 1. Use ant by simply typing the command "ant" (without quotes) in the command line (ant needs to be installed http://ant.apache.org/)
 	If the output is too long ant will only show the first part of it.
-	To manually run the compiled jar type "java -jar build/jar/NFG.jar"
+	To manually run the compiled jar type "java -jar build/jar/ApiaryParty.jar"
 2. Import the code to your favorite IDE and execute it that way
 
 To build JavaDoc:
