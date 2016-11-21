@@ -52,3 +52,10 @@ Temporary Items
 lib/apidocs/package-list
 *.js
 lib/apidocs/stylesheet.css
+*.class
+build/jar/ApiaryParty.jar
+doc/package-list
+*.css
+*.graph
+*.defense
+*.history
