@@ -32,7 +32,8 @@
     </target>
 
     <target name="run" depends="jar">
-        <java jar="${jar.dir}/${ant.project.name}.jar" fork="true"/>
+        <!--<java jar="${jar.dir}/${ant.project.name}.jar" fork="true"/>-->
+        <java jar="${jar.dir}/${ant.project.name}.jar" fork="true" dir="${jar.dir}"/>
     </target>
     
     <target name="doc" depends="" description="generate documentation">
