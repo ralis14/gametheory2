@@ -9,8 +9,8 @@ import java.util.Random;
  * 					not try to use variables that will carry on in to the next makeSingleAction()
  * 
  * Make use of the three protected variables inherited from Attacker. These variables include:
- * protected ArrayList<Node> capturedNodes - a list of the already captured nodes
- * protected ArrayList<Node> availableNodes - a list of the available nodes for attacking and probing.
+ * protected ArrayList&lt;Node&gt; capturedNodes - a list of the already captured nodes
+ * protected ArrayList&lt;Node&gt; availableNodes - a list of the available nodes for attacking and probing.
  * protected int budget - the current budget of the Attacker. Be careful that your next move will not cost more than your budget.
  * 
  * @author Porag - updated by Oscar
@@ -29,7 +29,9 @@ public class Beedrill extends Attacker {
 	public Beedrill(String defenderName, String graphFile) {
 		super(attackerName, defenderName, graphFile);
 	}
-	
+	/**
+	 * Default constructor do not change
+	 */
 	public Beedrill(){
 		super(attackerName);
 	}
@@ -41,8 +43,10 @@ public class Beedrill extends Attacker {
 		r = new Random();
 	}
 
-
-	@Override
+	/**
+	 * This is called by the game master while your agent still has funds. You return an action.
+	 * @return your action
+	 */
 	public AttackerAction makeAction() {
 		AttackerActionType type;		
 		int nodeID = -1;
@@ -81,9 +85,11 @@ public class Beedrill extends Attacker {
 			return new AttackerAction(type, nodeIDminmaxSV);
 	}
 
-	@Override
+	/**
+	 * The game master is giving you the result of the action.
+	 * @param  lastNode the node successfully attacked
+	 */
 	protected void result(Node lastNode) {
-		// TODO Auto-generated method stub
 		
 	}
 }

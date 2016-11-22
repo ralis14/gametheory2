@@ -9,8 +9,8 @@ import java.util.Random;
  * 					not try to use variables that will carry on in to the next makeSingleAction()
  * 
  * Make use of the three protected variables inherited from Attacker. These variables include:
- * protected ArrayList<Node> capturedNodes - a list of the already captured nodes
- * protected ArrayList<Node> availableNodes - a list of the available nodes for attacking and probing.
+ * protected ArrayList&lt;Node&gt; capturedNodes - a list of the already captured nodes
+ * protected ArrayList&lt;Node&gt; availableNodes - a list of the available nodes for attacking and probing.
  * protected int budget - the current budget of the Attacker. Be careful that your next move will not cost more than your budget.
  * 
  * @author Marcus Gutierrez

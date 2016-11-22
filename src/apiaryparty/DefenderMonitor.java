@@ -52,7 +52,12 @@ public class DefenderMonitor
             e.printStackTrace();
         }
     }
-    
+    /**
+     * Constructor used by Defender to initialize defense file and keep track of network changes.
+     * @param defenderName defender name
+     * @param graphFile Contains original name of graph i.e. "1" for 1.graph
+     * @param actions the actions made
+     */
     public DefenderMonitor(String defenderName, String graphFile, String actions){
     	 try
          {
@@ -65,7 +70,10 @@ public class DefenderMonitor
              e.printStackTrace();
          }
     }
-    
+    /**
+     * Intializes the defender monitor with a defender
+     * @param d the defender
+     */
     public DefenderMonitor(Defender d){
     	name = d.getName();
         budget = Parameters.DEFENDER_BUDGET;
@@ -148,7 +156,10 @@ public class DefenderMonitor
         net.printNetwork();
         net.printHiddenNetwork();
     }
-    
+    /**
+     * Applies the defender action
+     * @param action the defender action
+     */
     public void applyAction(DefenderAction action){
     	//int mode = Integer.parseInt(itr.next());
     	DefenderActionType mode = action.getType();
@@ -291,7 +302,8 @@ public class DefenderMonitor
      * Adds a honeypot node to the graph if possible. Otherwise charges an invalid.
      * @param sv Security Value for the honeypot
      * @param pv Point Value for the honeypot
-     * @param newNeighbors Array of Node ID's specifying which nodes to connect the honeypot to
+     * @param isDB if it is a database
+     * @param honeyNodeID the node to attach the honeypot to
      */
     public void honeypot(int sv, int pv, boolean isDB, int honeyNodeID)
     {
@@ -363,7 +375,10 @@ public class DefenderMonitor
     }
     
     /**
-     * Added 11/26/2014 1:20 PM
+     * checking if the firewalls with disconnect the graph
+     * @n1 the first node
+     * @n2 the second node
+     * @return if the graph is disconnected
      */
     private boolean disconnectsGraph(Node n1, Node n2){
     	//int n1loc = n2.neighbor.indexOf(n1);
@@ -378,7 +393,9 @@ public class DefenderMonitor
     }
     
     /**
-     * Added 11/26/2014 1:20 PM
+     * checks if the node is reachable from the start
+     * @n the node to check
+     * @return if the node is reachable
      */
     private boolean canReachPublicNode(Node n){
     	Stack<Node> fringe = new Stack<Node>();

@@ -140,6 +140,7 @@ public class Network {
 	 * Adds Honeypot in the network
 	 * @param sv An integer indicates security value
 	 * @param pv An integer indicates point value
+	 * @param isDatabase if it is a database honeypot
 	 * @param neighbors An integer array indicates all the neighbors
 	 */
 	public void addHoneypot(int sv, int pv, boolean isDatabase, int[] neighbors){

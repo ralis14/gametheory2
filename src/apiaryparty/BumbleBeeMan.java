@@ -9,8 +9,8 @@ import java.util.Random;
  * 					not try to use variables that will carry on in to the next makeSingleAction()
  * 
  * Make use of the three protected variables inherited from Attacker. These variables include:
- * protected ArrayList<Node> capturedNodes - a list of the already captured nodes
- * protected ArrayList<Node> availableNodes - a list of the available nodes for attacking and probing.
+ * protected ArrayList&lt;Node&gt; capturedNodes - a list of the already captured nodes
+ * protected ArrayList%lt;Node%gt; availableNodes - a list of the available nodes for attacking and probing.
  * protected int budget - the current budget of the Attacker. Be careful that your next move will not cost more than your budget.
  * 
  * @author Oscar Veliz
@@ -30,6 +30,9 @@ public class BumbleBeeMan extends Attacker {
 		super(attackerName, defenderName, graphFile);
 	}
 	
+	/**
+	 * default constructor
+	 */
 	public BumbleBeeMan(){
 		super(attackerName);
 	}
@@ -42,7 +45,10 @@ public class BumbleBeeMan extends Attacker {
 	}
 
 
-	@Override
+	/**
+	 * This is where your logic goes
+	 * @return the action your attacker wants to do
+	 */
 	public AttackerAction makeAction() {
         if(availableNodes.size()==0)
             return new AttackerAction(AttackerActionType.INVALID,0);
@@ -50,7 +56,10 @@ public class BumbleBeeMan extends Attacker {
 		return new AttackerAction(AttackerActionType.SUPERATTACK, nodeID);
 	}
 
-	@Override
+	/**
+	 * The result of your action is updated here if you want to do anything with it. The network will be updated anyway.
+	 * @param lastNode the node if successfully attacked
+	 */
 	protected void result(Node lastNode) {
 		// TODO Auto-generated method stub
 		

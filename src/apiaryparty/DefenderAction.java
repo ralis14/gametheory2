@@ -34,7 +34,7 @@ public class DefenderAction {
 	
 	/**
 	 * Constructor to end turn and invalid moves
-	 * @param actionType
+	 * @param actionType the action type
 	 */
 	public DefenderAction(DefenderActionType actionType){
 		if(actionType == DefenderActionType.END_TURN)
@@ -45,6 +45,7 @@ public class DefenderAction {
 	
 	/**
 	 * Constructor for node strengthen and placing honeypots
+	 * @param actionType the action type
 	 * @param node node id
 	 */
 	public DefenderAction(DefenderActionType actionType, int node){
@@ -60,6 +61,7 @@ public class DefenderAction {
 	}
 	/**
 	 * Gets the node id that was strengthened
+	 * @return the node id that was strengthened
 	 */
 	public int getSNode(){
 		return strengthenedNode;

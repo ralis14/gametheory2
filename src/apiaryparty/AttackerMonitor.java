@@ -70,6 +70,8 @@ public class AttackerMonitor
 
 	/**
 	 * Parses attacker's move and writes the result to history
+	 * @param a The attacker action
+	 * @return the network
 	 */
 	public Network readMove(AttackerAction a){
 		try{

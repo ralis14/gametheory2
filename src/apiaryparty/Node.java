@@ -11,7 +11,7 @@ import java.util.ArrayList;
  * pv - point value of a node (-1 means unknown)
  * isHoneyPot - boolean for if the node is a honeypot (-1 means unknown, 0 means false, 1 means true)
  * captured - if the node is a public entry node or has been successfully captured via attack
- * bestRoll - the highest roll on this node (if -1, the node has never been attacked), if the security value is -1, bestRoll may be used to reason what the sv might be (actual security value >= bestRoll if sv == -1)
+ * bestRoll - the highest roll on this node (if -1, the node has never been attacked), if the security value is -1, bestRoll may be used to reason what the sv might be (actual security value &gt;= bestRoll if sv == -1)
  * neighborAmount - number of connections this node has. Will be different than neighbor.size() if the node has not been captured. (-1 means unknown)
  * neighbor - list of neighbors to this node. Will be empty if the node has not been captured
  *
@@ -38,6 +38,7 @@ public class Node
 	
 	/**
      * used for comparison purposes.
+     * @param id the node id
      */
 	public Node(int id){
 		nodeID = id;
@@ -48,6 +49,7 @@ public class Node
      * @param nodeID An integer indicates nodeId
      * @param sv An integer indicates security value
      * @param pv An integer indicates point value
+     * @param isDatabase a boolean indicates database
      * @param isHoneyPot A boolean indicates HoneyPot
      */
 	public Node(int nodeID, int sv, int pv, boolean isDatabase, boolean isHoneyPot) {
@@ -71,6 +73,7 @@ public class Node
      * @param nodeID An integer indicates nodeId
      * @param sv An integer indicates security value
      * @param pv An integer indicates point value
+     * @param isDatabase a boolean indicates database
      * @param isHoneyPot indicates HoneyPot status
      */
 	public Node(int nodeID, int sv, int pv, boolean isDatabase, int isHoneyPot) {
@@ -91,6 +94,7 @@ public class Node
      * @param nodeID An integer indicates nodeId
      * @param sv An integer indicates security value
      * @param pv An integer indicates point value
+     * @param isDatabase a boolean indicates database
      * @param isHoneyPot indicates HoneyPot status
      * @param captured indicates if a node has been captured
      */
@@ -115,6 +119,7 @@ public class Node
 
 	/**
      * Sets the nodeId
+     * @param nodeID the new node id
      */
 	public void setNodeID(int nodeID)
 	{
@@ -133,6 +138,7 @@ public class Node
 	
 	/**
      * Sets the security value of the node
+     * @param sv the new security value
      */
 	public void setSv(int sv)
 	{
@@ -153,6 +159,7 @@ public class Node
 	
 	/**
      * Sets the point value of the node
+     * @param pv the new point value
      */
 	public void setPv(int pv)
 	{
@@ -161,6 +168,7 @@ public class Node
 	
 	/**
      * Sets if the node is a database
+     * @param isDB if it is a database
      */
 	public void setDB(boolean isDB)
 	{
@@ -182,9 +190,9 @@ public class Node
 	
 	/**
 	 * Returns the current status of a honey pot.
-	 * -1 -> true honeypot status is unknown
-	 * 0 -> this node is not a honeypot
-	 * 1 -> this node is a honeypot
+	 * -1 -&gt; true honeypot status is unknown
+	 * 0 -&gt; this node is not a honeypot
+	 * 1 -&gt; this node is a honeypot
 	 * @return honeypot's status
 	 */
 	public int getHoneyPot(){
@@ -219,9 +227,9 @@ public class Node
 	
 	/**
 	 * Sets the honeypot status of this node
-	 * -1 -> true honeypot status is unknown
-	 * 0 -> this node is not a honeypot
-	 * 1 -> this node is a honeypot
+	 * -1 -&gt; true honeypot status is unknown
+	 * 0 -&gt; this node is not a honeypot
+	 * 1 -&gt; this node is a honeypot
 	 * @param honeyPot sets the isHoneyPot field variable
 	 */
 	public void setHoneyPot(int honeyPot)
@@ -255,6 +263,7 @@ public class Node
 	
 	/**
 	 * Returns bestRoll
+	 * @return the value of the best roll
 	 */
 	public int getBestRoll(){
 		return bestRoll;
@@ -270,6 +279,7 @@ public class Node
 	
 	/**
 	 * Returns neighborAmount
+	 * @return neighbor amount
 	 */
 	public int getNeighborAmount(){
 		return neighborAmount;
@@ -295,6 +305,7 @@ public class Node
 
 	/**
      * Returns the neighbor
+     * @param idx the node index of the neighbors
      * @return Node of idx
      */
 	public Node getNeighbor(int idx)
@@ -313,6 +324,8 @@ public class Node
 	
 	/**
 	 * Overridden equals method that just compares NodeID
+	 * @param o the node to compare with
+	 * @return if the nodes are identical
 	 */
 	public final boolean equals(Object o){
 		Node n = (Node)o;
@@ -331,7 +344,10 @@ public class Node
 		//n.neighbor = neighbor;
 		return n;
 	}
-	
+	/**
+	 * to string method
+	 * @return the node id as a string
+	 */
 	public String toString(){
 		return Integer.toString(nodeID);
 	}

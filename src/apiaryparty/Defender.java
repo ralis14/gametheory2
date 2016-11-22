@@ -117,14 +117,28 @@ public abstract class Defender
         }
     }
     
+    /**
+     * given the node id will returns true if you can strengthen it. false otherwise.
+     * @param node the node id
+     * @return true if you can strengthen, false otherwise
+     */
     protected boolean isValidStrengthen(int node){
     	return dm.isValidStrengthen(node);
     }
-    
+    /**
+     * given two nodes id will returns true if you can firewall it. false otherwise.
+     * @param node1 the first node
+     * @param node2 the second node
+     * @return true if you can firewall, false otherwise
+     */
     protected boolean isValidFirewall(int node1, int node2){
     	return dm.isValidFirewall(node1, node2);
     }
-    
+    /**
+     * given the node id will returns true if it is a valid honeypot
+     * @param honeyNode the node id
+     * @return true if it is a valid honeypot, false otherwise
+     */
     protected boolean isValidHP(int honeyNode){
     	return dm.isValidHoneypot(honeyNode);
     }
@@ -149,6 +163,7 @@ public abstract class Defender
 
     /**
      * Defender logic goes here
+     * @return the action
      */
     public abstract DefenderAction makeAction();
     

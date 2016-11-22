@@ -18,7 +18,7 @@ public class Parser
 	/**
 	 * Given a .graph file, a network is generated following a predetermined format
 	 * 
-	 * @param filename
+	 * @param filename the file name
 	 * @return a Network object based on the .graph file given
 	 */
 	public static Network parseGraph(String filename)
@@ -89,9 +89,9 @@ public class Parser
 	}
     /**
 	 * Parses attacker's .history file and calculates and returns the attacker's network
-	 * @param attackerName
-	 * @param defenderName
-	 * @param graphName
+	 * @param attackerName the attacker name
+	 * @param defenderName the defender name
+	 * @param graphName the graph name
 	 * @return attacker's visible graph
 	 */
 	public static Network parseAttackerHistory(String attackerName, String defenderName, String graphName)
@@ -214,9 +214,9 @@ public class Parser
 	/**
 	 * Parses attacker's .history file and calculates and returns the attacker's budget
 	 * 
-	 * @param attackerName
-	 * @param defenderName
-	 * @param graphName
+	 * @param attackerName the attacker name
+	 * @param defenderName the defender name
+	 * @param graphName the graph name
 	 * @return budget i.e. integer value
 	 */
 	public static int parseAttackerBudget(String attackerName, String defenderName, String graphName){;
