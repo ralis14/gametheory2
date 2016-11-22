@@ -11,8 +11,9 @@ public class DefenderAction {
 	private int strengthenedNode;
 	private int fwallNode1;
 	private int fwallNode2;
-	private HoneypotType hpType;
+	//private HoneypotType hpType;
 	private int[] hpNeighbors;
+	private int honeyNode;
 	private int pv;
 	private int sv;
 	
@@ -32,12 +33,30 @@ public class DefenderAction {
 	}
 	
 	/**
-	 * Constructor for node strengthen
+	 * Constructor to end turn and invalid moves
+	 * @param actionType
+	 */
+	public DefenderAction(DefenderActionType actionType){
+		if(actionType == DefenderActionType.END_TURN)
+			type = DefenderActionType.END_TURN;
+		else
+			type = DefenderActionType.INVALID;
+	}
+	
+	/**
+	 * Constructor for node strengthen and placing honeypots
 	 * @param node node id
 	 */
-	public DefenderAction(int node){
-		strengthenedNode = node;
-		type = DefenderActionType.STRENGTHEN;
+	public DefenderAction(DefenderActionType actionType, int node){
+		if(actionType == DefenderActionType.STRENGTHEN){
+			strengthenedNode = node;
+			type = DefenderActionType.STRENGTHEN;
+		}else if(actionType == DefenderActionType.HONEYPOT){
+			type = DefenderActionType.HONEYPOT;
+			honeyNode = node;
+		}else{
+			type = DefenderActionType.INVALID;
+		}
 	}
 	/**
 	 * Gets the node id that was strengthened
@@ -76,11 +95,11 @@ public class DefenderAction {
 	 * @param hp the type of honeypot
 	 * @param neighbors array of node id's to connect to the honeypot
 	 */
-	public DefenderAction(HoneypotType hp, int[] neighbors){
+	/*public DefenderAction(HoneypotType hp, int[] neighbors){
 		hpType = hp;
 		hpNeighbors = neighbors;
 		type = DefenderActionType.HONEYPOT;
-	}
+	}*/
 	
 	/**
 	 * Constructor for ending turns
@@ -94,8 +113,20 @@ public class DefenderAction {
 	 * Returns the honeypot type
 	 * @return honeypot type
 	 */
-	public HoneypotType getHPType(){
+	/*public HoneypotType getHPType(){
 		return hpType;
+	}*/
+	
+	/**
+	 * Returns the source node of a honeypot
+	 * @return node honeypot is generated off of
+	 */
+	public int getHoneyNode(){
+		return honeyNode;
+	}
+	
+	public void setNeighbors(int[] neighbors){
+		hpNeighbors = neighbors;
 	}
 	
 	/**

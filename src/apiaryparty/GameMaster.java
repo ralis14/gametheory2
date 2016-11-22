@@ -43,10 +43,12 @@ public class GameMaster {
 				tryDefender(new DefenderDriver(PlayerState.INIT, defender));
 				boolean execute = true;
 				DefenderMonitor dm = new DefenderMonitor(defender);
+				
 				String defense = "";
 				do{ //While defender has money and has not ended turn
 					tryDefender(new DefenderDriver(PlayerState.MAKE_ACTION, defender));
 					DefenderAction action = defender.getLastAction();
+					
 					if(action != null){
 						dm.applyAction(action);
 						if(action.getType() != DefenderActionType.END_TURN){

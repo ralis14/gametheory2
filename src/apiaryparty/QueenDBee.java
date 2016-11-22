@@ -28,10 +28,13 @@ public class QueenDBee extends Defender{
 
 		@Override
 		public DefenderAction makeAction() {
-			int[] neighbors = new int[1];
-			neighbors[0] = r.nextInt(net.getSize());
-			if(getBudget() < honeypotCost(HoneypotType.DATABASE))
-				return new DefenderAction(false);
-			return new DefenderAction(HoneypotType.DATABASE,neighbors);
+			Random r = new Random();
+			int honeyNode = r.nextInt(net.getAvailableNodes().size());
+			int honeypotCost = honeypotCost(honeyNode);
+			if(getBudget() < honeypotCost){
+				return new DefenderAction(DefenderActionType.INVALID);
+			}
+			return new DefenderAction(DefenderActionType.HONEYPOT, honeyNode);
+			
 		}
 }

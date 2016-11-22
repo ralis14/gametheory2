@@ -54,7 +54,6 @@ public class AttackerMonitor
 			//clears history and adds the public nodes to the history
 			history = new PrintWriter(new FileWriter(attackerName + "-" + defenderName + "-" + graphName + ".history", false));
 			ArrayList<Node> publicNodes = visibleNet.getCapturedNodes();
-			System.out.println("PUBLIC NODES: " + publicNodes.size());
 			for(int i = 0; i < publicNodes.size(); i++){
 				String publicString = "6," + publicNodes.get(i).getNodeID()+",";
 				ArrayList<Node> neighbors = publicNodes.get(i).getNeighborList();
@@ -93,10 +92,14 @@ public class AttackerMonitor
 						visibleNet.getNode(id).setSv(n.getSv());
 						visibleNet.getNode(id).setHoneyPot(n.getHoneyPot());
 						visibleNet.getNode(id).setCaptured(true);
-						if(visibleNet.getNode(id).isHoneyPot())
+						if(visibleNet.getNode(id).isHoneyPot()){
 							//points += Parameters.HONEY_PENALTY;
-							points -= visibleNet.getNode(id).getPv();
-						else{
+							//points -= visibleNet.getNode(id).getPv();
+							budget = 0;
+							System.out.println("attack on node " + id + " triggered a honeypot with a roll of " + attackRoll + "! Ending round.");
+							history.println("0," + id + ",true," + attackRoll + "," + n.getPv() + "," + n.getSv() + "," + n.isDatabase() + "," + n.getHoneyPot());
+							break;
+						}else{
 							points += visibleNet.getNode(id).getPv();
 							/*for(int j = 0; j < n.neighbor.size(); j++){
 								visibleNet.getNode(id).addNeighbor(visibleNet.getNode(n.neighbor.get(j).getNodeID()));
@@ -131,10 +134,14 @@ public class AttackerMonitor
 						visibleNet.getNode(id).setSv(n.getSv());
 						visibleNet.getNode(id).setHoneyPot(n.getHoneyPot());
 						visibleNet.getNode(id).setCaptured(true);
-						if(visibleNet.getNode(id).isHoneyPot())
+						if(visibleNet.getNode(id).isHoneyPot()){
 							//points += Parameters.HONEY_PENALTY;
-							points -= visibleNet.getNode(id).getPv();
-						else{
+							//points -= visibleNet.getNode(id).getPv();
+							budget = 0;
+							System.out.println("super attack on node " + id + " triggered a honeypot with a roll of " + attackRoll + "! Ending round.");
+							history.println("1," + id + ",true," + attackRoll + "," + n.getPv() + "," + n.getSv() + "," + n.isDatabase() + "," + n.getHoneyPot());
+							break;
+						}else{
 							points += visibleNet.getNode(id).getPv();
 							/*for(int j = 0; j < n.neighbor.size(); j++){
 								visibleNet.getNode(id).addNeighbor(visibleNet.getNode(n.neighbor.get(j).getNodeID()));
@@ -156,22 +163,22 @@ public class AttackerMonitor
 					budget -= Parameters.INVALID_RATE;
 				}
 				break;
-			case PROBE_VALUES://probe security value
+			case PROBE_POINTS://probe point value
 				id = a.nodeID;
 				if(isAvailableNode(id) && isValidProbeV(id))
 				{
-					budget -= Parameters.PROBE_VALUES_RATE;
+					budget -= Parameters.PROBE_POINTS_RATE;
 					Node n = net.getNode(id);
 
 					int pv = n.getPv();
 					int sv = n.getSv();
 					visibleNet.getNode(id).setPv(pv);
-					visibleNet.getNode(id).setSv(sv);
-					System.out.println("probed node " + id + "'s values: " + pv + " point value and " + sv + " security value");
+					//visibleNet.getNode(id).setSv(sv);
+					System.out.println("probed node " + id + "'s point value: " + pv);
 					history.println("2," + id + "," + pv + "," + sv);
 				}
 				else{
-					System.out.println("Invalid probing of values on node "+ id + "! " + isAvailableNode(id));
+					System.out.println("Invalid probing of point value on node "+ id + "! " + isAvailableNode(id));
 					history.println("-1");
 					budget -= Parameters.INVALID_RATE;
 				}
@@ -260,7 +267,7 @@ public class AttackerMonitor
 	 * @return if there is enough budget for this move
 	 */
 	public boolean isValidProbeV(int id){
-		if(budget < Parameters.PROBE_VALUES_RATE)
+		if(budget < Parameters.PROBE_POINTS_RATE)
 			return false;
 		return true;
 	}

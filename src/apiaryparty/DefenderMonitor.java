@@ -14,7 +14,7 @@ import java.util.Random;
 import java.util.Stack;
 
 /**
- * Axillary class for creating and parsing defense files.
+ * Auxiliary class for creating and parsing defense files.
  * Defender will use the three parameter constructor and combination of strengthen(), firewall, and honeypot()
  * to generate defense file. Have Defender remember to call close() when finished for safety.
  * Game Master will use the two parameter constructor for parsing original network and defense file to generate new network.
@@ -126,13 +126,10 @@ public class DefenderMonitor
                         int[] n = new int[newNeighbors.size()];
                         for(int i = 0; i < n.length; i++)
                             n[i] = newNeighbors.get(i);
-                        if(isValidHoneypot(n,HoneypotType.NETWORKED_CONVIENCE))
-                        {
-                            net.addHoneypot(sv, pv, isDB, n);
-                            budget -= Parameters.HONEYPOT_RATE;
-                        }
-                        else
-                            budget -= Parameters.INVALID_RATE;
+                   
+                        net.addHoneypot(sv, pv, isDB, n);
+                        budget -= Parameters.HONEYPOT_RATE;
+                       
                      break;
                     case 3://end turn
                     	budget = 0;
@@ -184,35 +181,39 @@ public class DefenderMonitor
                 break;
             case HONEYPOT://honeypot
             	Random r = new Random();
-            	int sv = 0;
-            	int pv = 0;
-            	int cost = honeypotCost(action.getHPType());
+            	int honeyNodeID = action.getHoneyNode();
+            	Node honeyNode = net.getNode(honeyNodeID);
+            	
+            	int sv = honeyNode.getSv(); //set honeypot's SV to [-1,+1] of source honey node
+            	int randTmp = r.nextInt(3)-1;
+            	sv += randTmp;
+            	sv = Math.min(sv, 19);
+            	sv = Math.max(sv, 1);
+            	
+            	int pv = honeyNode.getPv(); //set honeypot's PV to [-1,+1] of source honey node
+            	randTmp = r.nextInt(3)-1;
+            	pv += randTmp;
+            	pv = Math.min(pv, 19);
+            	pv = Math.max(pv, 1);
+
+            	int cost = honeypotCost(honeyNodeID);
             	if (cost > budget){
             		budget -= Parameters.INVALID_RATE;
             		break;
             	}
-            	boolean isDatabase = false;
-            	switch(action.getHPType()){
-	            	case NETWORKED_CONVIENCE:
-	            		sv = r.nextInt(8) + 1;
-	            		pv = r.nextInt(8) + 1;
-	            	case PERSONAL_DEVICE:
-	            		sv = r.nextInt(11) + 5;
-	            		pv = r.nextInt(11) + 5;
-	            		break;
-	            	case SECURED_DEVICE:
-	            		sv = r.nextInt(8) + 12;
-	            		pv = r.nextInt(8) + 12;
-	            		break;
-	            	case DATABASE:
-	            		sv = r.nextInt(8) + 12;
-	            		pv = r.nextInt(10) + 20;
-	            		isDatabase = true;
-	            		break;
+            	boolean isDatabase = honeyNode.isDatabase();
+            	
+            	int[] honeyNeighbors = new int[honeyNode.neighbor.size()];
+            	honeyNeighbors[0] = honeyNode.getNodeID();
+            	
+            	for(int i = 1; i < honeyNode.neighbor.size(); i++){
+            		honeyNeighbors[i] = honeyNode.neighbor.get(i-1).getNodeID();
             	}
+            	
             	action.setHPValues(pv, sv);
+            	action.setNeighbors(honeyNeighbors);
             	budget -= cost;
-	            net.addHoneypot(sv, pv, isDatabase, action.getNeighbors());	
+	            net.addHoneypot(sv, pv, isDatabase, honeyNeighbors);
             	break;
             case END_TURN://end turn
             	budget = 0;
@@ -292,21 +293,32 @@ public class DefenderMonitor
      * @param pv Point Value for the honeypot
      * @param newNeighbors Array of Node ID's specifying which nodes to connect the honeypot to
      */
-    public void honeypot(int sv, int pv, boolean isDB, int[] newNeighbors)
+    public void honeypot(int sv, int pv, boolean isDB, int honeyNodeID)
     {
-        if(isValidHoneypot(newNeighbors,HoneypotType.NETWORKED_CONVIENCE))
+    	Node honeyNode = net.getNode(honeyNodeID);
+    	
+    	int[] newNeighbors = new int[honeyNode.neighbor.size()+1];
+    	newNeighbors[0] = honeyNodeID;
+    	for(int i = 1; i <= honeyNode.neighbor.size(); i++){
+    		newNeighbors[i] = honeyNode.neighbor.get(i-1).getNodeID();
+    	}
+    	
+        if(isValidHoneypot(honeyNodeID, newNeighbors))
         {
             net.addHoneypot(sv, pv, isDB, newNeighbors);
-            budget -= Parameters.HONEYPOT_RATE;
+            
+            //PRINT HERE
+            
+            budget -= honeypotCost(honeyNodeID);
             String s = "2,"+sv+","+pv+",";
             for(int i =0; i < newNeighbors.length-1;i++)
                 s = s + newNeighbors[i]+",";
             s = s + newNeighbors[newNeighbors.length-1];
             pw.write(s);
             pw.println();
-        }
-        else
+        }else{
             invalid();
+        }
     }
 
     /**
@@ -344,8 +356,7 @@ public class DefenderMonitor
                 return false;
             else if(n1.neighbor.contains(n2)){
             	return disconnectsGraph(n1, n2);
-            }
-            else{
+            }else{
             	return false;
             }
         }
@@ -391,8 +402,28 @@ public class DefenderMonitor
     	return false;
     }
 
-    public boolean isValidHoneypot(int[] newNeighbors, HoneypotType ht){
-        if(budget < honeypotCost(ht))
+    public boolean isValidHoneypot(int honeyNodeID){
+    	Node honeyNode = net.getNode(honeyNodeID);
+    	int[] newNeighbors = new int[honeyNode.neighbor.size()+1];
+    	newNeighbors[0] = honeyNodeID;
+    	for(int i = 1; i <= honeyNode.neighbor.size(); i++){
+    		newNeighbors[i] = honeyNode.neighbor.get(i-1).getNodeID();
+    	}
+        if(budget < honeypotCost(honeyNodeID))
+            return false;
+        else{
+            //check if there are two of the same neighbor (indicator that something is wrong
+            //and that all of the nodes being connected to exist
+            Arrays.sort(newNeighbors);
+            for(int i = 0; i < newNeighbors.length-1;i++)
+                if(newNeighbors[i]==newNeighbors[i+1] || net.getNode(newNeighbors[i])==null)
+                    return false;
+            return true;
+        }
+    }
+    
+    public boolean isValidHoneypot(int honeyNodeID, int[] newNeighbors){
+        if(budget < honeypotCost(honeyNodeID))
             return false;
         else{
             //check if there are two of the same neighbor (indicator that something is wrong
@@ -409,8 +440,9 @@ public class DefenderMonitor
     	budget = -1;
     }
     
-    public int honeypotCost(HoneypotType ht){
-    	switch(ht){
+    public int honeypotCost(int honeyNode){
+    	return net.getNode(honeyNode).getPv() + Parameters.HONEYPOT_RATE;
+    	/*switch(ht){
     		case NETWORKED_CONVIENCE:
     			return Parameters.HONEYPOT_RATE;
     		case PERSONAL_DEVICE:
@@ -422,7 +454,7 @@ public class DefenderMonitor
     		default:
     			return Parameters.INVALID_RATE;
     			
-    	}
+    	}*/
     }
     
     public Network getNetwork(){

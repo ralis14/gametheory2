@@ -80,33 +80,30 @@ public abstract class Defender
             	}
             case HONEYPOT:
             	Random r = new Random();
-            	int sv = 0;
-            	int pv = 0;
-            	switch(a.getHPType()){
-            	case NETWORKED_CONVIENCE:
-            		sv = r.nextInt(8) + 1;
-            		pv = r.nextInt(8) + 1;
-            	case PERSONAL_DEVICE:
-            		sv = r.nextInt(11) + 5;
-            		pv = r.nextInt(11) + 5;
-            		break;
-            	case SECURED_DEVICE:
-            		sv = r.nextInt(8) + 12;
-            		pv = r.nextInt(8) + 12;
-            		break;
-            	case DATABASE:
-            		sv = r.nextInt(8) + 12;
-            		pv = r.nextInt(10) + 20;
-            		break;
-            	}
-            	boolean isDB = a.getHPType() == HoneypotType.DATABASE;
-            	if(dm.isValidHoneypot(a.getNeighbors(),a.getHPType())){
-            		dm.honeypot(sv, pv, isDB, a.getNeighbors());
+            	int honeyNodeID = a.getHoneyNode();
+            	Node honeyNode = net.getNode(honeyNodeID);
+            	
+            	int sv = honeyNode.getSv(); //set honeypot's SV to [-1,+1] of source honey node
+            	int randTmp = r.nextInt(3)-1;
+            	sv += randTmp;
+            	sv = Math.min(sv, 19);
+            	sv = Math.max(sv, 1);
+            	
+            	int pv = honeyNode.getPv(); //set honeypot's PV to [-1,+1] of source honey node
+            	randTmp = r.nextInt(3)-1;
+            	pv += randTmp;
+            	pv = Math.min(pv, 19);
+            	pv = Math.max(pv, 1);
+            	
+            	boolean isDatabase = honeyNode.isDatabase();
+            	
+            	if(dm.isValidHoneypot(honeyNodeID)){
+            		dm.honeypot(sv, pv, isDatabase, honeyNodeID);
             		lastAction = a;
             		return;
             	}else{
             		dm.invalid();
-            		lastAction = new DefenderAction(); //INVALID MOVE
+            		lastAction = new DefenderAction(DefenderActionType.INVALID); //INVALID MOVE
             		return;
             	}
             case END_TURN:
@@ -128,8 +125,8 @@ public abstract class Defender
     	return dm.isValidFirewall(node1, node2);
     }
     
-    protected boolean isValidHP(HoneypotType hpt, int[] neighbors){
-    	return dm.isValidHoneypot(neighbors,hpt);
+    protected boolean isValidHP(int honeyNode){
+    	return dm.isValidHoneypot(honeyNode);
     }
 
     /**
@@ -172,12 +169,13 @@ public abstract class Defender
     }
     
     /**
-     * Computes the cost of a honeypot based on the type
-     * @param ht honeypot type
+     * Computes the cost of a honeypot based on source node of honeypot
+     * @param honeyNode the source node
      * @return the cost of the honeypot
      */
-    public int honeypotCost(HoneypotType ht){
-    	switch(ht){
+    public int honeypotCost(int honeyNode){
+    	return net.getNode(honeyNode).getPv() + Parameters.HONEYPOT_RATE;
+    	/*switch(ht){
     		case NETWORKED_CONVIENCE:
     			return Parameters.HONEYPOT_RATE;
     		case PERSONAL_DEVICE:
@@ -189,7 +187,7 @@ public abstract class Defender
     		default:
     			return Parameters.INVALID_RATE;
     			
-    	}
+    	}*/
     }
     
 

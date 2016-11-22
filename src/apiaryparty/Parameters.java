@@ -49,8 +49,8 @@ public class Parameters {
     public static final int SUPERATTACK_ROLL = 50;
     /**The cost for performing a super attack*/
     public static final int SUPERATTACK_RATE = 20;
-    /**The cost to probe for the security value*/
-    public static final int PROBE_VALUES_RATE = 2;
+    /**The cost to probe for the point value*/
+    public static final int PROBE_POINTS_RATE = 2;
     /**The cost to probe for the point value*/
     public static final int PROBE_HONEY_RATE = 1;
     /**Penalty for successfully capturing a honey pot*/

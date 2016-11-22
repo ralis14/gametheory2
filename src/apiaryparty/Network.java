@@ -41,8 +41,7 @@ public class Network {
 	 * @param networkName An integer indicates network name
 	 * @param numNodes An integer indicates number of nodes in the network
 	 */
-	public Network(int networkName, int numNodes)
-	{
+	public Network(int networkName, int numNodes){
 		name = networkName;
 		fullGraphName = "" + name;
 		nodes = new Node[numNodes];
@@ -51,14 +50,19 @@ public class Network {
 			nodes[i].setNodeID(i);
 		}
 	}
-	
+
 	public Network(Network n){
 		this.name = n.name;
 		this.nodes = new Node[n.nodes.length];
 		for(int i = 0; i < nodes.length; i++){
 			nodes[i] = n.nodes[i].clone();
 		}
-			
+		for(int i = 0; i < nodes.length; i++){
+			for(int j = 0; j < n.getNode(i).neighbor.size(); j++){
+				int neighborID = n.getNode(i).neighbor.get(j).getNodeID();
+				nodes[i].addNeighbor(nodes[neighborID]);
+			}
+		}
 	}
 
 	/**
@@ -78,7 +82,7 @@ public class Network {
 	}
 
 	/**
-	 * Sets netwrok name.
+	 * Sets network name.
 	 * @param name network name
 	 */
 	public void setName(int name) {
@@ -90,8 +94,7 @@ public class Network {
 	 * @param nodeId An integer indicates nodeId
 	 * @return returns node.
 	 */
-	public Node getNode(int nodeId)
-	{
+	public Node getNode(int nodeId){
 		if(nodeId >= nodes.length || nodeId < 0)
 			return null;
 		for (Node node : nodes)
@@ -138,18 +141,19 @@ public class Network {
 	 * @param sv An integer indicates security value
 	 * @param pv An integer indicates point value
 	 * @param neighbors An integer array indicates all the neighbors
-	 */	
-	public void addHoneypot(int sv, int pv, boolean isDatabase, int[]neighbors)
-	{
+	 */
+	public void addHoneypot(int sv, int pv, boolean isDatabase, int[] neighbors){
+		Node honeypot = new Node(nodes.length, sv, pv, isDatabase, 1);
 		Node[] n = new Node[nodes.length+1];
 		for(int i = 0; i < nodes.length; i++)
 			n[i] = nodes[i];
-		n[nodes.length] = new Node(nodes.length,sv,pv,isDatabase,1);
+		n[nodes.length] = honeypot;
 
-		for(int i = 0; i < neighbors.length; i++)
-		{
-			n[nodes.length].neighbor.add(nodes[neighbors[i]]);
-			nodes[neighbors[i]].neighbor.add(n[nodes.length]);
+		for(int i = 0; i < neighbors.length; i++){
+			honeypot.neighbor.add(nodes[neighbors[i]]);
+			nodes[neighbors[i]].neighbor.add(honeypot);
+			
+			//nodes[neighbors[i]].neighbor.add(n[nodes.length]);
 		}
 		nodes = n;
 	}
@@ -190,7 +194,8 @@ public class Network {
 				if(node.isCaptured() == true)
 					writer.println(node.getPv()+","+node.getSv()+","+node.isDatabase()+","+node.getHoneyPot());
 				else
-					writer.println("-1,-1,"+node.isDatabase()+",-1");
+					writer.println("-1," + node.getSv() + "," + node.isDatabase()+",-1");
+//					writer.println("-1,-1,"+node.isDatabase()+",-1");
 			}
 			writer.close();
 		}
@@ -254,6 +259,14 @@ public class Network {
 		{
 			e.printStackTrace();
 		}
+	}
+	
+	/**
+	 * Returns all the nodes in the network.
+	 * @return nodes in the network
+	 */
+	public Node[] getNodes(){
+		return nodes;
 	}
 
 	/**

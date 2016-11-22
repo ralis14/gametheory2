@@ -4,7 +4,7 @@ public enum AttackerActionType {
 
 	ATTACK,
 	SUPERATTACK,
-	PROBE_VALUES,
+	PROBE_POINTS,
 	PROBE_HONEYPOT,
 	END_TURN,
 	INVALID;

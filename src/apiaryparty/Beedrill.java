@@ -52,7 +52,7 @@ public class Beedrill extends Attacker {
 			if (x.getSv() == -1)
 			{
 				nodeID = x.getNodeID();
-				type = AttackerActionType.PROBE_VALUES;
+				type = AttackerActionType.PROBE_POINTS;
 				return new AttackerAction(type, nodeID);
 			}			
 		}

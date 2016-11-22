@@ -55,7 +55,7 @@ public class YellowJacket extends Attacker {
 		else if(move == 1)
 			type = AttackerActionType.SUPERATTACK;
 		else if(move == 2)
-			type = AttackerActionType.PROBE_VALUES;
+			type = AttackerActionType.PROBE_POINTS;
 		else if(move == 3)
 			type = AttackerActionType.PROBE_HONEYPOT;
 		else

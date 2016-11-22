@@ -9,11 +9,10 @@ import java.util.ArrayList;
  * @author Marcus Gutierrez
  * @version 2014/11/14
  */
-public abstract class Attacker
-{
+public abstract class Attacker{
     private String attackerName = "defaultAttacker"; //Overwrite this variable in your attacker subclass
     private String graph;
-    private Network netVisible;
+    protected Network net; //attacker's visible network
     private String agentName;
     private String defenderName;
     private String graphName;
@@ -22,6 +21,7 @@ public abstract class Attacker
     protected ArrayList<Node> capturedNodes;
     protected ArrayList<Node> availableNodes;
     protected int budget;
+
     /**
      * Constructor.
      * Parses Network stored in graphFile.
@@ -31,13 +31,12 @@ public abstract class Attacker
      * @param defenderName Defender agent's name i.e. "Jets"
      * @param graphName String containing number of visibility network i.e. "1914"
      */
-    public Attacker(String agentName, String defenderName, String graphName)
-    {
+    public Attacker(String agentName, String defenderName, String graphName){
         attackerName = agentName;
         graph = graphName;
-        netVisible = Parser.parseAttackerHistory(agentName, defenderName, graphName);
-        capturedNodes = netVisible.getCapturedNodes();
-        availableNodes = netVisible.getAvailableNodes();
+        net = Parser.parseAttackerHistory(agentName, defenderName, graphName);
+        capturedNodes = net.getCapturedNodes();
+        availableNodes = net.getAvailableNodes();
         budget = Parser.parseAttackerBudget(attackerName, defenderName, graphName);
     }
     
@@ -46,35 +45,35 @@ public abstract class Attacker
     }
     
     protected abstract void initialize();
-    
+
     protected final boolean isValidAttack(int id){
-    	Node n = netVisible.getNode(id);
+    	Node n = net.getNode(id);
         if(budget < Parameters.ATTACK_RATE || n == null)
             return false;
         return true;
     }
-    
+
     protected boolean isValidSuperAttack(int id){
-    	Node n = netVisible.getNode(id);
+    	Node n = net.getNode(id);
         if(budget < Parameters.SUPERATTACK_RATE || n == null)
             return false;
         return true;
     }
-    
+
     protected boolean isValidProbeV(int id){
-    	Node n = netVisible.getNode(id);
-        if(budget < Parameters.PROBE_VALUES_RATE || n == null)
+    	Node n = net.getNode(id);
+        if(budget < Parameters.PROBE_POINTS_RATE || n == null)
             return false;
         return true;
     }
-    
+
     protected boolean isValidProbeHP(int id){
-    	Node n = netVisible.getNode(id);
+    	Node n = net.getNode(id);
         if(budget < Parameters.PROBE_HONEY_RATE || n == null)
             return false;
         return true;
     }
-    
+
     /**
      * Executes one action for the attacker
      */
@@ -117,9 +116,9 @@ public abstract class Attacker
 	        		lastAction = a;
 	        	}
 	        	break;
-	        case PROBE_VALUES:
+	        case PROBE_POINTS:
 	        	if(isValidProbeV(a.nodeID)){
-	        		budget -= Parameters.PROBE_VALUES_RATE;;
+	        		budget -= Parameters.PROBE_POINTS_RATE;;
 	        		lastAction = a;
 	        	}
 	        	break;
@@ -150,17 +149,17 @@ public abstract class Attacker
     }
     
     public final void actionResult(){
-    	netVisible = Parser.parseAttackerHistory(agentName, defenderName, graphName);
-        capturedNodes = netVisible.getCapturedNodes();
-        availableNodes = netVisible.getAvailableNodes();
-        result(netVisible.getNode(lastNodeID));
+    	net = Parser.parseAttackerHistory(agentName, defenderName, graphName);
+        capturedNodes = net.getCapturedNodes();
+        availableNodes = net.getAvailableNodes();
+        result(net.getNode(lastNodeID));
     }
     
     public final void actionResult(Network net){
-    	netVisible = net;
-    	capturedNodes = netVisible.getCapturedNodes();
-        availableNodes = netVisible.getAvailableNodes();
-        result(netVisible.getNode(lastNodeID));
+    	net = net;
+    	capturedNodes = net.getCapturedNodes();
+        availableNodes = net.getAvailableNodes();
+        result(net.getNode(lastNodeID));
     }
     
     
@@ -185,6 +184,6 @@ public abstract class Attacker
     }
     
     public void setVisible(Network visible){
-    	netVisible = visible;
+    	net = visible;
     }
 }

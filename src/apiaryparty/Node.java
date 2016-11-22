@@ -321,10 +321,18 @@ public class Node
 		return false;
 	}
 	
+	/**
+	 * Creates a copy of the Node, leaving empty the nodes. They need to be manually added!!!
+	 */
 	public Node clone(){
 		Node n = new Node(nodeID, sv, pv, isDatabase, isHoneyPot, captured);
 		n.setBestRoll(bestRoll);
-		n.neighbor = neighbor;
+		n.neighbor = new ArrayList<Node>();
+		//n.neighbor = neighbor;
 		return n;
+	}
+	
+	public String toString(){
+		return Integer.toString(nodeID);
 	}
 }

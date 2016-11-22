@@ -239,7 +239,7 @@ public class Parser
 					budget -= Parameters.SUPERATTACK_RATE;
 					break;
 				case 2: //probe security value
-					budget -= Parameters.PROBE_VALUES_RATE;
+					budget -= Parameters.PROBE_POINTS_RATE;
 					break;
 				case 3: //probe honeypot
 					budget -= Parameters.PROBE_HONEY_RATE;

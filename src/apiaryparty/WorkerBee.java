@@ -34,6 +34,6 @@ public class WorkerBee extends Defender
         int node = r.nextInt(net.getSize());
         while(!isValidStrengthen(node) && tries++ < 10)
             node = r.nextInt(net.getSize());
-        return new DefenderAction(node);
+        return new DefenderAction(DefenderActionType.STRENGTHEN, node);
 	}
 }
