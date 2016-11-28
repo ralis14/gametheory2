@@ -7,7 +7,7 @@
  * Network class: contains the nodes adjacent to it
  * Budget = Parser.ParseAttackBudget(attackname, defendname, graph)
  * To Attack: use AttackAction(AttackerActionType, nodeId)
- * Parameters: all the costs (Attaack, SuperAttack, Probe Point, Probe Honey Pot)
+ * Parameters: all the costs (Attack, SuperAttack, Probe Point, Probe Honey Pot)
  */
 package apiaryparty;
 
