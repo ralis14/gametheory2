@@ -15,7 +15,6 @@ import java.util.ArrayList;
  * @version 2015/11/17
  */
 public class GameMaster {
-	
 	/**
 	 * Runs the tournament
 	 * 
