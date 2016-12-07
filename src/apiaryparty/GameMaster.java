@@ -74,6 +74,7 @@ public class GameMaster {
 		
 		// add Attackers here
 		ArrayList<Attacker> attackers = new ArrayList<Attacker>();
+		attackers.add(new SupermanPrime());
 		attackers.add(new GreenHornet());
 		attackers.add(new BumbleBeeMan());
 		attackers.add(new Beedrill());
@@ -182,6 +183,8 @@ public class GameMaster {
 			return new YellowJacket(defName, file);
 
 		// add your attacker here
+		if(atName.equalsIgnoreCase("SupermanPrime"))
+			return  new SupermanPrime(defName, file);
 
 		// in case your name was not added
 		return new Attacker("", "", "") {
